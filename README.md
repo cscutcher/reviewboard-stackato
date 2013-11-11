@@ -10,6 +10,7 @@ Usage
 -----
 
 In theory;
+
   stackato push
 
 should work. 
