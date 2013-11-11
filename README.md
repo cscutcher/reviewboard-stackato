@@ -9,8 +9,4 @@ Still not working quite right yet. Especially using `easy_install --user -U .` a
 Usage 
 -----
 
-In theory;
-
-  stackato push
-
-should work. 
+In theory `stackato push` should install reviewboard on a host.
