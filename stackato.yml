@@ -1,0 +1,44 @@
+name: reviewboard
+framework:
+    type: python
+    runtime: python27
+app-dir: reviewboard_site
+services:
+    ${name}-db: mysql
+    ${name}-memchached: memcached
+    ${name}-site: filesystem
+requirements:
+    pip:
+        # even though we use easy_install elsewhere we need to install a package first with pip
+        # so that easy_install --user works. I'm not sure why yet.
+        - mysql-python
+        - psycopg2
+    unix:
+        - patch
+        - git-core
+        - subversion
+    ubuntu:
+        - python-svn
+    redhat:
+        - pysvn
+mem: 512M 
+hooks:
+    post-staging:
+        # pip isn't capable of installing reviewboard
+        - easy_install --user --upgrade .
+        - install_rb
+    pre-running:
+        - create_uwsgi_config
+env:
+    REVIEWBOARD_DEFAULT_ADMIN_USER: admin
+    REVIEWBOARD_DEFAULT_ADMIN_PASS:
+        required: y
+    REVIEWBOARD_DEFAULT_ADMIN_EMAIL:
+        required: y
+    REVIEWBOARD_DEBUG:
+        default: "False"
+        choices:
+            - "True"
+            - "False"
+processes:
+    web: $STACKATO_UWSGI uwsgi.json
